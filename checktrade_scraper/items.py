@@ -4,9 +4,15 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
+from scrapy.item import Field
 
 
 class ChecktradeScraperItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    company_name = Field()
+    unique_name = Field()
+    email = Field()
+    mobile_phone = Field()
+    landline_phone = Field()
+    cat_label = Field()
+    postal_code = Field()
+
