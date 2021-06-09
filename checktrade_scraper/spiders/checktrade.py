@@ -2,6 +2,7 @@ import scrapy
 import urllib.parse
 import json
 from checktrade_scraper.items import ChecktradeScraperItem
+from w3lib.url import add_or_replace_parameter
 
 
 class ChecktrdeSpider(scrapy.Spider):
@@ -38,12 +39,28 @@ class ChecktrdeSpider(scrapy.Spider):
             url = f'https://wapi.checkatrade.com/search?{urllib.parse.urlencode(self.params)}'
             yield scrapy.Request(url=url, callback=self.parse, cb_kwargs={'cat_label': cat_label,
                                                                           'postal_code': self.params['location']})
+            # finish earlier
+            if int(cat_id) > 1000:
+                break
 
     def parse(self, response, cat_label, postal_code):
-        output_item = ChecktradeScraperItem()
         response_json = response.json()
-        items = response_json.get('items')
         pages = response_json.get('pages')
+
+        for page_num in reversed(range(1, pages+1)):
+            next_page = add_or_replace_parameter(response.url, 'page', page_num)
+            yield scrapy.Request(
+                url=next_page,
+                callback=self.scrape,
+                cb_kwargs={'cat_label': cat_label,
+                           'postal_code': postal_code},
+                dont_filter=True
+            )
+
+    def scrape(self, response, cat_label, postal_code):
+        response_json = response.json()
+        output_item = ChecktradeScraperItem()
+        items = response_json.get('items')
         if items:
             for item in items:
                 output_item['company_name'] = item['name']
