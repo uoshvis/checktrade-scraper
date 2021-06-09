@@ -70,17 +70,8 @@ class ChecktrdeSpider(scrapy.Spider):
                 output_item['landline_phone'] = self.get_landline(item)
                 output_item['cat_label'] = cat_label
                 output_item['postal_code'] = postal_code
-
-        # for i in range(1, pages+1):
-        #   url encode page number
-        #   yield Request(callback=self.parse_item)
-        breakpoint()
-        yield output_item
-
-    def parse_item(self):
-        # move output logic here
-        pass
-
+                output_item['response_url'] = response.url
+                yield output_item
 
     @staticmethod
     def get_mobile(item):

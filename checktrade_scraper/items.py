@@ -15,4 +15,5 @@ class ChecktradeScraperItem(scrapy.Item):
     landline_phone = Field()
     cat_label = Field()
     postal_code = Field()
+    response_url = Field()
 
