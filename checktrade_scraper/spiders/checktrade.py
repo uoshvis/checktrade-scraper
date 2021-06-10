@@ -70,7 +70,6 @@ class ChecktrdeSpider(scrapy.Spider):
                 output_item['landline_phone'] = self.get_landline(item)
                 output_item['cat_label'] = cat_label
                 output_item['postal_code'] = postal_code
-                output_item['response_url'] = response.url
                 yield output_item
 
     @staticmethod
