@@ -23,7 +23,7 @@ class ChecktrdeSpider(scrapy.Spider):
 
     params = {
         'categoryId': '',
-        'location': postal_codes[1],  # choose single postcode
+        'location': postal_codes[1],  # remove to scrape all postcodes
         'page': 1,
         'itemsPerPage': 100
 
@@ -39,22 +39,21 @@ class ChecktrdeSpider(scrapy.Spider):
             url = f'https://wapi.checkatrade.com/search?{urllib.parse.urlencode(self.params)}'
             yield scrapy.Request(url=url, callback=self.parse, cb_kwargs={'cat_label': cat_label,
                                                                           'postal_code': self.params['location']})
-            # finish earlier
+            # remove to get all categories
             if int(cat_id) > 1000:
                 break
 
     def parse(self, response, cat_label, postal_code):
         response_json = response.json()
         pages = response_json.get('pages')
-
-        for page_num in reversed(range(1, pages+1)):
+        for page_num in reversed(range(1, pages+1)):    # to keep the page order
             next_page = add_or_replace_parameter(response.url, 'page', page_num)
             yield scrapy.Request(
                 url=next_page,
                 callback=self.scrape,
                 cb_kwargs={'cat_label': cat_label,
                            'postal_code': postal_code},
-                dont_filter=True
+                dont_filter=True    # to allow duplicate request
             )
 
     def scrape(self, response, cat_label, postal_code):
