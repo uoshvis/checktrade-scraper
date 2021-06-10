@@ -10,4 +10,6 @@ from itemadapter import ItemAdapter
 
 class ChecktradeScraperPipeline:
     def process_item(self, item, spider):
+        if not item.get('email'):
+            item['email'] = 'N/A'
         return item
