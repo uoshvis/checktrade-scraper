@@ -30,6 +30,7 @@ class ChecktrdeSpider(scrapy.Spider):
     }
 
     def start_requests(self):
+        # https://wapi.checkatrade.com/search/categories
         with open(self.categories_fn) as f:
             categories_data = json.load(f)
         categories = [(category['id'], category['label']) for category in categories_data]
