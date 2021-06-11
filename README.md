@@ -1,8 +1,11 @@
 # checktrade-scraper
 Checktrade scraper example. Consumes checktrade API to parse data by postcode.
 
+**Data source:**
 
-To run scraper:
+<https://www.checkatrade.com/>
+
+**To run scraper:**
 ```
 scrapy crawl checktrade -o output_example.csv -t csv
 ```
